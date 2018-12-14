@@ -1,6 +1,5 @@
 import os
 
-
 class Model:
     def __init__(self):
         '''
@@ -45,20 +44,23 @@ class Model:
         if the file exists.  Otherwise resets both the filename
         and file contents members.
         '''
-        statinfo = os.stat(fileName)
-        if statinfo.st_size >= self.sizeMaxToOpen:
-            self.fileName = fileName
-            self.fileContents = "File is bigger than the limit configured in the tools"
-        else:
-            if self.isValid(fileName):
+        try:
+            statinfo = os.stat(fileName)
+            if statinfo.st_size >= self.sizeMaxToOpen:
                 self.fileName = fileName
-                try:
-                    self.fileContents = open(fileName, 'r').read()
-                except:
-                    self.fileContents = "File not valid to open"
+                self.fileContents = "File is bigger than the limit configured in the tools"
             else:
-                self.fileContents = ""
-                self.fileName = ""
+                if self.isValid(fileName):
+                    self.fileName = fileName
+                    try:
+                        self.fileContents = open(fileName, 'r').read()
+                    except:
+                        self.fileContents = "File not valid to open"
+                else:
+                    self.fileContents = ""
+                    self.fileName = ""
+        except:
+            self.fileContents = "Are you sure your file exist ?"
 
     def getFileName(self):
         '''
